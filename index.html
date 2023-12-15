@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JavaScript Quiz</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background-color: #f4f4f4;
+        }
+        .quiz-container {
+            position: relative;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            width: 80%;
+            max-width: 800px;
+        }
+        .question {
+            padding: 20px;
+            border-bottom: 1px solid #ccc;
+        }
+        .options {
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .option {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+        .option:hover {
+            background-color: #f9f9f9;
+        }
+        .result {
+            padding: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .timer {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #3498db;
+            color: #fff;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        @media(max-width:768px){
+
+            .timer {
+            position: static;
+            text-align: center;
+          
+        }
+        }
+    </style>
+</head>
+<body>
+
+<div class="quiz-container" id="quiz-container">
+    <div class="timer" id="timer">Time Remaining: 20:00</div>
+    <div class="question" id="question"></div>
+    <div class="options" id="options"></div>
+    <div class="result" id="result"></div>
+</div>
+
+<script>
+    const questions = [
+        {
+            question: "Q1: There are how many buttons in keyboard?",
+            options: ["60", "100", "120", "106"],
+            correctAnswer: "106"
+        },
+        {
+            question: "Do you Know of which subject you are giving test?",
+            options: ["S.S.T", "Maths", "ICT", "Science"],
+            correctAnswer: "ICT"
+        },
+        {
+            question: "Which language is used to make the stucture of a website?",
+            options: ["PHP", "Html", "Java script", "CSS"],
+            correctAnswer: "Html"
+        },
+        {
+            question: "Which keyword is used to declare a constant in JavaScript?",
+            options: ["var", "let", "const", "fixed"],
+            correctAnswer: "const"
+        },
+        {
+            question: "Which keyword is used to declare a constant in JavaScript?",
+            options: ["var", "let", "const", "fixed"],
+            correctAnswer: "const"
+        },
+        {
+            question: "Which keyword is used to declare a constant in JavaScript?",
+            options: ["var", "let", "const", "fixed"],
+            correctAnswer: "const"
+        },
+        {
+            question: "Which keyword is used to declare a constant in JavaScript?",
+            options: ["var", "let", "const", "fixed"],
+            correctAnswer: "const"
+        },
+        {
+            question: "Which keyword is used to declare a constant in JavaScript?",
+            options: ["var", "let", "const", "fixed"],
+            correctAnswer: "const"
+        },
+        {
+            question: "Which keyword is used to declare a constant in JavaScript?",
+            options: ["var", "let", "const", "fixed"],
+            correctAnswer: "const"
+        },
+        {
+            question: "Which keyword is used to declare a constant in JavaScript?",
+            options: ["var", "let", "const", "fixed"],
+            correctAnswer: "const"
+        },
+        // ... (add more questions)
+    ];
+
+    const quizContainer = document.getElementById('quiz-container');
+    const questionElement = document.getElementById('question');
+    const optionsContainer = document.getElementById('options');
+    const resultElement = document.getElementById('result');
+    const timerElement = document.getElementById('timer');
+
+    let timer;
+    let timeRemaining = 20 * 60;
+
+    function updateTimer() {
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = timeRemaining % 60;
+        timerElement.textContent = `Time Remaining: ${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
+    function startTimer() {
+        timer = setInterval(() => {
+            if (timeRemaining > 0) {
+                timeRemaining -= 1;
+                updateTimer();
+            } else {
+                clearInterval(timer);
+                quizContainer.innerHTML = '<div class="result">Time is up! Quiz Completed!</div>';
+            }
+        }, 1000);
+    }
+
+    function loadQuestion(questionIndex) {
+        const currentQuestion = questions[questionIndex];
+        questionElement.textContent = currentQuestion.question;
+
+        optionsContainer.innerHTML = '';
+
+        currentQuestion.options.forEach((option, index) => {
+            const optionElement = document.createElement('div');
+            optionElement.className = 'option';
+            optionElement.textContent = option;
+            optionElement.addEventListener('click', () => checkAnswer(questionIndex, index));
+            optionsContainer.appendChild(optionElement);
+        });
+    }
+
+    function checkAnswer(questionIndex, selectedOptionIndex) {
+        const currentQuestion = questions[questionIndex];
+        const selectedOption = currentQuestion.options[selectedOptionIndex];
+
+        if (selectedOption === currentQuestion.correctAnswer) {
+            resultElement.textContent = 'Correct!';
+        } else {
+            resultElement.textContent = 'Incorrect. The correct answer is ' + currentQuestion.correctAnswer;
+        }
+
+        setTimeout(() => {
+            resultElement.textContent = '';
+            if (questionIndex < questions.length - 1) {
+                loadQuestion(questionIndex + 1);
+            } else {
+                clearInterval(timer);
+                quizContainer.innerHTML = '<div class="result">Quiz Completed!</div>';
+            }
+        }, 1500);
+    }
+    loadQuestion(0);
+    startTimer();
+</script>
+<!-- Your existing HTML code remains unchanged -->
+
+<script>
+    // Your existing JavaScript code here
+
+    // Add event listener for visibility change
+    document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'hidden') {
+            clearInterval(timer);
+            quizContainer.innerHTML = '<div class="result">Quiz Completed!</div>';
+        }
+    });
+</script>
+<!-- Your existing HTML code remains unchanged -->
+
+<script>
+    // Your existing JavaScript code here
+
+    let inactivityTimer;
+
+    function resetInactivityTimer() {
+        clearInterval(inactivityTimer);
+        inactivityTimer = setInterval(function () {
+            clearInterval(timer);
+            quizContainer.innerHTML = '<div class="result">Quiz Completed!</div>';
+        }, 60000); // Adjust the duration (in milliseconds) for inactivity as needed (30 seconds in this example)
+    }
+
+    document.addEventListener('visibilitychange', function () {
+        if (document.visibilityState === 'hidden') {
+            clearInterval(timer);
+            quizContainer.innerHTML = '<div class="result">Quiz Completed!</div>';
+        } else {
+            resetInactivityTimer();
+        }
+    });
+
+    document.addEventListener('mousemove', resetInactivityTimer);
+    document.addEventListener('keydown', resetInactivityTimer);
+</script>
+
+</body>
+</html>
